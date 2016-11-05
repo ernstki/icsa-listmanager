@@ -58,11 +58,14 @@ The script has rudimentary built-in help, which you can reference with `python
 listmanager.py --help`. But here are the basics:
 
 ```
-# All names & emails on the "Master List" sheet w/ 'Class Year' == 2020:
-python listmanager.py germany.xlsx 2020
-
-# Or for *all* names in the "Master List" sheet:
+# All names & emails on the "Master List" sheet:
 python listmanager.py germany.xlsx
+
+# Or for *all* names in the "Master List" sheet w/ 'Class Year' == 2020:
+python listmanager.py germany.xlsx
+
+# Export list of names to a file suitable for LISTSERV bulk subscription:
+python listmanager.py germany.xlsx 2020 > germany_2020.txt
 ```
 
 ## References
