@@ -33,15 +33,13 @@ The script has rudimentary built-in help, which you can reference with `python
 listmanager.py --help`. But here are the basics:
 
 ```
-# For all names
-python listmanager.py germany 2020
+# All names & emails on the "Master List" sheet w/ 'Class Year' == 2020:
+python listmanager.py germany.xlsx 2020
 
-# Or for *all* names in the "German Master List" sheet:
-python listmanager.py germany
-
-# Redirect into a file for uploading to LISTSERV
-python listmanager.py germany 2020 > germany_2020.txt
+# Or for *all* names in the "Master List" sheet:
+python listmanager.py germany.xlsx
 ```
+
 
 # References
 
