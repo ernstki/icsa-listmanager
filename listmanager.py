@@ -19,48 +19,61 @@
 ##                                                                      ##
 ##     python workbook.xlsx 2020                                        ##
 ##                                                                      ##
+##   Bugs / Missing Features:                                           ##
+##                                                                      ##
+##     1. No way to sort output                                         ##
+##                                                                      ##
 ##########################################################################
 
 import os
 import sys
+import re
 import click
 
 from openpyxl import load_workbook
 from pandas import DataFrame
 
+class ListManager:
+    roster = {}
 
-def print_members(excelfile, year=None):
-    """
-    Print out the list of members from the 'Master List' tab in a format
-    that's suitable for bulk import into LISTSERV
-    """
-    wb = load_workbook(excelfile)
+    def __init__(self, excelfile):
+        """
+        Open workbook given as argument, look for sheets that end in "20xx"
+        and store their contents on a dictionary of DataFrames, with the
+        graduating years as (string) keys
+        """
+        p = re.compile('.*(20\d\d)$')
+        wb = load_workbook(excelfile)
+        for sheet in wb.get_sheet_names():
+            m = p.match(sheet)
+            if not m: continue
+            data = wb.get_sheet_by_name(sheet).values
+            # Skip over any empty rows, then save off the column headers
+            cols = next(data)
+            while not cols[0]:
+                cols = next(data)
+            # Store data in dictionary as a Pandas DataFrame
+            self.roster[m.group(1)] = DataFrame(data, columns=cols)
 
-    # Look for a sheet named "Master (something)" or bail out
-    masterlist = [s for s in wb.get_sheet_names() if "Master" in s]
-    if not masterlist:
-        raise RuntimeError("'Master' tab not found in spreadsheet")
+        if not self.roster.keys():
+            raise RuntimeError("No tabs matching '20xx' found in spreadsheet")
 
-    ws = wb.get_sheet_by_name(masterlist[0])
-    data = ws.values
+    def print_members(self, year=None):
+        """
+        Print out the list of members from the all worksheet tabs with a name
+        matching "<Something> 20xx" in a format that's suitable for bulk
+        import into LISTSERV
+        """
+        if year:
+            years = [str(year)]
+        else:
+            years = self.roster.keys()
 
-    # Skip over any empty rows, then save off the column headers
-    cols = next(data)
-    while not cols[0]:
-        cols = next(data)
-
-    # Load data into a Pandas DataFrame for further manipulation
-    df = DataFrame(data, columns=cols)
-
-    if year:
-        for p in df[df['Class Year'] == year][['Name', 'Email']].itertuples():
-            # If, for some odd reason, the DataFrame has 'None's at the end
-            if p.Name is None: break
-            print "%s <%s>" % (p.Name.title(), p.Email)
-    else:
-        for p in df[['Name', 'Email']].itertuples():
-            if p.Name is None: break
-            print "%s <%s>" % (p.Name.title(), p.Email)
+        for year in years:
+            df = self.roster[year]
+            for p in df[['Name', 'Email']].itertuples():
+                if p.Name is None: break
+                print "%s <%s>" % (p.Name.title(), p.Email)
 
 
 @click.command()
@@ -68,10 +81,8 @@ def print_members(excelfile, year=None):
 @click.argument('year', type=click.INT, required=False)
 def read_workbook(excelfile, year=None):
     """Open .xlsx workbook and print names and emails"""
-    print_members(excelfile, year)
-
+    lm = ListManager(excelfile)
+    lm.print_members(year)
 
 if __name__ == '__main__':
     read_workbook()
-
-

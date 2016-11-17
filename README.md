@@ -1,4 +1,4 @@
-# List management with Python
+# LISTSERV list management with Python
 
 The `listmanager.py` script included in this repository will extract names and
 emails from an Excel (OOXML `.xlsx` format) spreadsheet and print them in the
