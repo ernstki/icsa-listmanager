@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'Click',
         'openpyxl',
+        'pandas',
     ],
     entry_points='''
         [console_scripts]

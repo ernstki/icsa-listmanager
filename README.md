@@ -30,47 +30,55 @@ retrieve list members by graduating year.
 
 ## Installation
 
-### Install Python, `pip`, and `virtualenv`
-
 You'll need [Python][] and [pip][]. On a modern OS (Python > 2.7.9), `pip`
-should already be installed and in your `$PATH`.
+_should_ already be installed and in your exectuable search path (`$PATH` on
+Unix and `%PATH%` on Windows).
 
-Next you'll want to install [virtualenv][] globally, with `pip`, like this:
+Do this in a terminal and cross your fingers:
 
-    sudo pip install virtualenv
+```bash
+# in the directory where you cloned / downloaded this project...
+cd icsa-listserv
+pip install --user .
+```
 
-or install the `virtualenv` package through your OS's package manager (_e.g._,
-`apt-get` or `yum` for Linux, MacPorts or Homebrew on Mac).
-
-On Windows, `sudo` isn't necessary. That's a Unix thing. If you have trouble,
-refer to the `virtualenv` [installation documentation][virtualenv]
-
-### Install Pandas and openpyxl
+On Windows, `sudo` isn't necessary. That's a Unix thing. However, there's
+a good chance that you'll get a message like `'pip' is not recognized as an
+internal or external command`, and in that case you'll want to add these
+paths (separated by semicolons) to your `PATH` environment variable:
 
 ```
-# First, create and activate the virtual environment
-cd /path/where/you/cloned/this/repo
-virtualenv venv
-source venv/bin/activate
-
-# Then use 'pip' to install dependencies
-pip install -r requirements.txt
+C:\Python<VER>
+C:\Python<VER>\Scripts
+C:\Users\<USER>\AppData\Roaming\Python\Scripts (for 'pip install --user')
 ```
+([instructions][envvars])
+
+Replace `<VER>` with your actual Python version, _e.g._, `Python27` or
+`Python35` and `<USER>` with your actual Windows username. Some of these may
+have been added for you by the Python installer, if you're lucky.
 
 ## Usage
 
-The script has rudimentary built-in help, which you can reference with `python
-listmanager.py --help`. But here are the basics:
+You should end up with a script called `listmanager` in your `PATH`, which you
+can execute from anywhere on the system. If you type this in and get some
+variation on a "command not found" error, try one of the alternatives
+mentioned in [the wiki][wiki]. In a pinch, you can invoke the script with
+`python listmanager.py [options]` while you're inside the `icsa-listmanager`
+directory.
+
+The script has rudimentary built-in help, which you can reference with
+`listmanager --help`. But here are the basics:
 
 ```
 # All names & emails on all tabs (all graduating years)
-python listmanager.py germany.xlsx
+listmanager germany.xlsx
 
 # Or for only those students in the graduating class of 2020
-python listmanager.py germany.xlsx 2020
+listmanager germany.xlsx 2020
 
 # Export list of names to a file suitable for LISTSERV bulk subscription:
-python listmanager.py germany.xlsx 2020 > germany_2020.txt
+listmanager germany.xlsx 2020 > germany_2020.txt
 ```
 
 ## To do
@@ -87,6 +95,7 @@ python listmanager.py germany.xlsx 2020 > germany_2020.txt
 
 [python]: https://www.python.org/downloads/
 [pip]: https://pip.pypa.io/en/stable/installing/
-[virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 [Pandas]: http://pandas.pydata.org/pandas-docs/stable/index.html
 [openpyxl]: http://openpyxl.readthedocs.io/en/latest/index.html
+[envvars]: http://www.computerhope.com/issues/ch000549.htm
+[wiki]: https://github.uc.edu/ernstki/icsa-listmanager/wiki

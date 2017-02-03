@@ -2,6 +2,7 @@
 .*sw?
 *~
 *.xlsx
+!students.xlsx
 
 #### joe made this: https://goel.io/joe
 
