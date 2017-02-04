@@ -29,9 +29,11 @@ import os
 import sys
 import re
 import click
+import warnings
 
 from openpyxl import load_workbook
 from pandas import DataFrame
+
 
 class ListManager:
     roster = {}
@@ -43,7 +45,13 @@ class ListManager:
         graduating years as (string) keys
         """
         p = re.compile('.*(20\d\d)$')
-        wb = load_workbook(excelfile)
+
+        # reference:
+        # https://docs.python.org/2/library/warnings.html#temporarily-suppressing-warnings
+        with warnings.catch_warnings() as w:
+            warnings.filterwarnings('ignore', 'Unknown extension')
+            wb = load_workbook(excelfile)
+
         for sheet in wb.get_sheet_names():
             m = p.match(sheet)
             if not m: continue
