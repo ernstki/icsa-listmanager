@@ -3,7 +3,11 @@ from setuptools import setup
 setup(
     name='listmanager',
     version='0.1',
-    py_modules=['xlreader'],
+    py_modules=[
+        'config',
+        'excelreader',
+        'mailhandler',
+    ],
     install_requires=[
         'Click',
         'openpyxl',
@@ -11,6 +15,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        listmanager=xlreader.xlreader:read_workbook
+        listmanager=excelreader.excelreader:read_workbook
     ''',
 )
