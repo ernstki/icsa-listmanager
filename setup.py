@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='listmanager',
-    version='0.1',
+    version='0.2',
     py_modules=[
         'listmanager.config',
         'listmanager.excelreader',
@@ -16,6 +16,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        listmanager=listmanager.excelreader:read_workbook
+        listmanager=listmanager.listmanager:read_workbook
     ''',
 )

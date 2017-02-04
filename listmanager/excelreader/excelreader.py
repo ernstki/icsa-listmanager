@@ -1,41 +1,27 @@
-#!/usr/bin/env python
-##########################################################################
-##                                                                      ##
-##   listmanager.py                                                     ##
-##                                                                      ##
-##   Generate a list of names and emails from an Excel (OOXML .xlsx)    ##
-##   workbook that's in a suitable format for LISTSERV's bulk           ##
-##   subscription function.                                             ##
-##                                                                      ##
-##   Author:   Kevin Ernst <ernstki@mail.uc.edu>                        ##
-##   Date:     05 November 2016                                         ##
-##                                                                      ##
-##   References:                                                        ##
-##                                                                      ##
-##     1. http://pandas.pydata.org/pandas-docs/stable/index.html        ##
-##     2. http://openpyxl.readthedocs.io/en/latest/index.html           ##
-##                                                                      ##
-##   Sample Usage:                                                      ##
-##                                                                      ##
-##     python xlreader.py workbook.xlsx 2020                            ##
-##                                                                      ##
-##   Bugs / Missing Features:                                           ##
-##                                                                      ##
-##     1. No way to sort output                                         ##
-##                                                                      ##
-##########################################################################
+"""
+Generate a list of names and emails from an Excel (OOXML .xlsx) workbook that's
+in a suitable format for LISTSERV's bulk subscription function.
 
+References:
+
+  1. http://pandas.pydata.org/pandas-docs/stable/index.html
+  2. http://openpyxl.readthedocs.io/en/latest/index.html
+"""
 import os
 import sys
 import re
-import click
 import warnings
 
 from openpyxl import load_workbook
 from pandas import DataFrame
 
 
-class ListManager:
+class ExcelReader:
+    """
+    Excel spreadsheet reader class. Loads .xlsx file given as the first
+    argument to the constructor and creates a Pandas dataframe with which to
+    access the class roster data.
+    """
     roster = {}
 
     def __init__(self, excelfile):
@@ -71,6 +57,8 @@ class ListManager:
         Print out the list of members from the all worksheet tabs with a name
         matching "<Something> 20xx" in a format that's suitable for bulk
         import into LISTSERV
+
+        TODO: Allow printing in sorted order
         """
         if year:
             years = [str(year)]
@@ -81,17 +69,4 @@ class ListManager:
             df = self.roster[year]
             for p in df[['Name', 'Email']].itertuples():
                 if p.Name is None: break
-                print "%s <%s>" % (p.Name.title(), p.Email)
-
-
-@click.command()
-@click.argument('excelfile', type=click.Path(exists=True))
-@click.argument('year', type=click.INT, required=False)
-def read_workbook(excelfile, year=None):
-    """Open .xlsx workbook and print names and emails in a format that LISTSERV
-    understands"""
-    lm = ListManager(excelfile)
-    lm.print_members(year)
-
-if __name__ == '__main__':
-    read_workbook()
+                print("{} <{}>".format(p.Name.title(), p.Email))
