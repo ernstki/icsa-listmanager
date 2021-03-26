@@ -44,10 +44,11 @@ class ListManager:
         """
         p = re.compile('.*(20\d\d)$')
         wb = load_workbook(excelfile)
-        for sheet in wb.get_sheet_names():
+
+        for sheet in wb.sheetnames:
             m = p.match(sheet)
             if not m: continue
-            data = wb.get_sheet_by_name(sheet).values
+            data = wb[sheet].values
             # Skip over any empty rows, then save off the column headers
             cols = next(data)
             while not cols[0]:
@@ -73,7 +74,7 @@ class ListManager:
             df = self.roster[year]
             for p in df[['Name', 'Email']].itertuples():
                 if p.Name is None: break
-                print "%s <%s>" % (p.Name.title(), p.Email)
+                print("{} <{}>".format(p.Name.title(), p.Email))
 
 
 @click.command()
